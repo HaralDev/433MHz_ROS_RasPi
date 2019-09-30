@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer"/>
+</launch>

@@ -1,0 +1,10 @@
+#!/usr/bin/env python2
+print 'Starting node send_node'
+
+from support_scripts import main_programme
+
+if __name__ == "__main__":
+	print 'Now running main'	
+	# Run main programme
+	main_programme()
+		

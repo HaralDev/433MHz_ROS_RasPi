@@ -36,47 +36,47 @@ def status_messages(clover_id):
     return messages
 
 def total_msg_hash(message_list):
-    logger.debug("Starting function")
-    
-    # Get the length of the message, make it length 2 with zfill
-    message_length = len(message_list) + 1
-    length_string = str(message_length).zfill(2)
-    logger.debug("Full message length will be %s", length_string)
-    
-    # Get the full message string
-    msg_string = "".join(tuple(message_list))
-    logger.debug("Full message string is: %s", msg_string)
-    
-    # Loop over the string to get the total sum
-    total = 0
-    for ind, number in enumerate(msg_string, 1):
-        logger.debug("Current hash is: %d", total)
-        total += int(number) * ind
-    
-    # Get the total hash, and the mod to make it of length 2
-    logger.debug("Total hash is: %d", total)
-    total_mod = total % 100
-    logger.debug("Total hash with mod is: %d", total)
-    hash_string = str(total).zfill(2)
+	logger.debug("Starting function")
 
-    # Format the total string
-    total_string = ''.join((length_string, hash_string))
+	# Get the length of the message, make it length 2 with zfill
+	message_length = len(message_list) + 1
+	length_string = str(message_length).zfill(2)
+	logger.debug("Full message length will be %s", length_string)
 
-    logger.debug("Total hash formatted as: %s", total_string)
+	# Get the full message string
+	msg_string = "".join(tuple(message_list))
+	logger.debug("Full message string is: %s", msg_string)
 
-    return total_string
+	# Loop over the string to get the total sum
+	total = 0
+	for ind, number in enumerate(msg_string, 1):
+		logger.debug("Current hash is: %d", total)
+		total += int(number) * ind
+    
+	# Get the total hash, and the mod to make it of length 2
+	logger.debug("Total hash is: %d", total)
+	total_mod = total % 100
+	logger.debug("Total hash with mod is: %d", total)
+	hash_string = str(total_mod).zfill(2)
+	
+	# Format the total string
+	total_string = ''.join((length_string, hash_string))
+	assert len(total_string) == 4
+
+	logger.debug("Total hash formatted as: %s", total_string)
+
+	return total_string
 
 
 
 def format_message(message_nr, clover_id, hash, message):
-    logger.debug("Starting function")
+	logger.debug("Starting function")
 
-    formatted_message = ''.join((str(message_nr), str(clover_id), hash, message))
+	formatted_message = ''.join((str(message_nr), str(clover_id), hash, message))
 
-    logger.debug("Formatted message as: %s", formatted_message)
-    assert len(formatted_message) == 7
-
-    return formatted_message
+	logger.debug("Formatted message as: %s", formatted_message)
+	assert len(formatted_message) == 7
+	return formatted_message
 
 
 def sum_hash(message):

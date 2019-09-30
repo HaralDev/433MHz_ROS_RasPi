@@ -3,6 +3,8 @@ project(rf_communication)
 
 ## Compile as C++0x, supported in ROS Kinetic and newer, and needed for the rc-switch library
 add_compile_options(-std=c++0x)
+## Rc-switch library needs this definition to know we are using a Raspberry. The dependence on this definition was removed, as it would sometimes raise the error: fatal error: WProgram.h: No such file or directory.
+add_definitions(-DRPI)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -16,15 +18,14 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
+
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
 
 
-## Generate added messages and services with any dependencies listed here
-generate_messages(DEPENDENCIES std_msgs)
 
 
 ###################################
@@ -42,6 +43,10 @@ catkin_package(
   CATKIN_DEPENDS roscpp rospy std_msgs
   DEPENDS message_runtime
 )
+
+# Python support install, should be called after catkin_package because only then is {CATKIN_PACKAGE_BIN_DESTINATION} made
+catkin_install_python(PROGRAMS src/send_node DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 
 # RC SWITCH library
 add_library(rcswitch include/rc-switch/RCSwitch.cpp)
