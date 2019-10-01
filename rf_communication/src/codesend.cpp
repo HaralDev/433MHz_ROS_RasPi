@@ -17,16 +17,21 @@ or your remote control)
 #include <rc-switch/RCSwitch.h>
 #include <stdlib.h>
 #include <stdio.h>
-     
+#include <sstream>
 
 int main(int argc, char *argv[]) {
     
     // This pin is not the first pin on the RPi GPIO header!
     // Consult https://projects.drogon.net/raspberry-pi/wiringpi/pins/
     // for more information.
+    // IMPLEMENT ENV LATER
+//char * var = std::getenv("TRANSMIT_PIN");
+    //std::istringstream iss(var);
+    //int PIN;
+    //iss >> PIN;
     int PIN = 0;
-    
-    // Parse the first parameter to this command as an integer
+
+// Parse the first parameter to this command as an integer
     int protocol = 0; // A value of 0 will use rc-switch's default value
     int pulseLength = 0;
 

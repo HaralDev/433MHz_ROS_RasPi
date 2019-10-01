@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo Setting environment variables.
+
+export CLOVER_NR="5"
+
+export RECEIVE_PIN="2"
+
+export TRANSMIT_PIN="0"
