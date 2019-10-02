@@ -150,7 +150,7 @@ def delete_old_messages(time_now):
                 # A message is currently send from the send_node every 3 seconds,
                 # and the message sending process takes less than 1 seconds, therefore 
                 # wait for 2 seconds to delete the key
-                if time_expired > 3:
+                if time_expired > 4:
 
                     # Remove message from the dictionary containing all this rovers messages
                     single_clover_messages.pop(message)
