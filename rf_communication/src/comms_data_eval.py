@@ -95,7 +95,7 @@ data_folder = "%s/communication_data" % desktop_path# Log to desktop in a folder
 data_filename = "%s.csv" %   date_time              # Standard file format where logs will be stored, more will be prepended in write_to_csv
 
 # Headers for the csv files
-single_msg_csv_hdr = ["time_first_message", "times_received", "clovername"]
+single_msg_csv_hdr = ["time_first_message", "times_received", "message", "clovername"]
 full_msg_csv_hdr = ["time_received", "received","clovername"]
 
 
@@ -136,58 +136,77 @@ def delete_old_messages(time_now):
 
     logger.info("Dictionary now has {0} items, which means {0} rovers have recently sent their messages.".format(dict_length))
 
-    for clovername, single_clover_message in clover_message_dict.items():
-        # If the clover_message_dict is not empty, do the following
-        if dict_length > 0:
-            print single_clover_message
+    # If the clover_message_dict is not empty, do the following
+    if dict_length > 0:
+
+        # Loop over the big dictionary
+        for clovername, single_clover_messages in clover_message_dict.items():
+            
+            logger.info("Currently there are %d messages in the dictionary for %s." % (len(single_clover_messages), clovername))
             # Loop over dict
-            for message, message_details in single_clover_message.items():
-		        time_expired = time_now - message_details["genesis"]
+            for message, message_details in single_clover_messages.items():
+                time_expired = time_now - message_details["genesis"]
 
-		        # A message is currently send from the send_node every 3 seconds,
-		        # and the message sending process takes less than 1 seconds, therefore 
-		        # wait for 2 seconds to delete the key
-		        if time_expired > 2:
+                # A message is currently send from the send_node every 3 seconds,
+                # and the message sending process takes less than 1 seconds, therefore 
+                # wait for 2 seconds to delete the key
+                if time_expired > 3:
 
-					# Before deleting the old message, first write the message data to
-					# the csv
-					capture_datapoint(message, message_details, clovername)
-				
-					clover_message_dict.pop(message)
-					logging.info("Deleted message %s" % message)
+                    # Remove message from the dictionary containing all this rovers messages
+                    single_clover_messages.pop(message)
+                    logging.info("Deleted message %s" % message)  
 
+                    #--------------------------------------------------------------
+                    #           DATA LOGGING
+
+                    #             SINGLE MESSAGE    					
+                    # Before deleting the old message, first write the message data to
+                    # the csv
+                    capture_single_msg_datapoint(message, message_details, clovername)         
+
+                    #           FULL MESSAGE
+                    if len(single_clover_messages) == 4:
+                        last_msg, last_msg_dict = next(msg for msg in single_clover_messages if msg[0]==4)
+                        time_last = last_msg_dict["genesis"]                    
+                        capture_full_msg_datapoint(msg, time_last)
 
     # If it is empty, there is nothing to delete
-	else:
-		pass
+    else:
+        pass
 
-def capture_single_msg_datapoint(message, message_details, clovername):
+def capture_single_msg_datapoint(message, data, clovername):
+    
+    occurance, genesis = data["received_nr"], data["genesis"]
+    logger.info("Capturing datapoint {} which occured {} times, first at {}".format(message, occurance, genesis))
+	
+    file_name_part = "clover%s_singlemessage" % message[1]
+    row = [genesis, occurance, message, clovername]
+	
+    write_to_csv(row, file_name_part)
 
-	file_name_part = "clover%s_singlemessage" % message[1]
-	row = [data["genesis"], data["received_nr"], clovername]
-	write_to_csv(row, file_name_part)
 
 
-
-def capture_full_msg_datapoint(message, time_now, clovername):
+def capture_full_msg_datapoint(message, time_last):
 
 	# Also make a file where to post the data if the full message 
 	# was received
-	clovername = "clover%s" % message[1]
-	file_name_part = "%s_fullmessage" % clovername
-	data = [time_now, 1, clovername]
-	write_to_csv(data, file_name_part, header = full_msg_csv_hdr)
+
+    logger.info("Caught a full message, capturing now")
+
+    clovername = "clover%s" % message[1]
+    file_name_part = "%s_fullmessage" % clovername
+    data = [time_now, 1, clovername]
+    write_to_csv(data, file_name_part, header = full_msg_csv_hdr)
 	
 
 
 
-def increment_receive(data, time_now):
+def increment_receive(message, time_now):
     """
     Function increments the proper message by one to indicate another receive of
     the same message
     """
-    logger.info("Incrementing message received %s" % data.data)
-    message = data.data
+    logger.info("Incrementing message received %s" % message)
     clover_name = "clover%s" % message[1]
 
     # If message is already there, increment by l
@@ -197,7 +216,7 @@ def increment_receive(data, time_now):
         else:   
             clover_message_dict[clover_name][message] = {}
             clover_message_dict[clover_name][message]["received_nr"] = 1
-            clover_message_dict[clover_name][message]["genesis"] = 1
+            clover_message_dict[clover_name][message]["genesis"] = time_now
 
     # otherwise set to 1 and define genesis time
     else:
@@ -228,21 +247,29 @@ def write_to_csv(row, file_name_part, header=single_msg_csv_hdr):
             writer.writerow(header)
             writer.writerow(row)
 
+def check_full_msg(message, time_now):
+    msg_nr = message[0]
+    clover_name = "clover%s" % message[1]
+
+    if msg_nr == 4 and clover_name in clover_message_dict and len(clover_message_dict[clover_name]) == 4:
+        capture_full_msg_datapoint(message, time_now)
+
+
 def callback(data):
-	"""
-	Function is initiated when data comes in. So we want to process 
-	the data from this function.
-	"""
-	logger.info("Data incoming")
+    """
+    Function is initiated when data comes in. So we want to process 
+    the data from this function.
+    """
+    logger.info("Data incoming")
+    message = data.data
 
-	# Retrieve time of message incoming, if older than 5 seconds
-	time_now = time.time()
+    time_now = time.time()
 
-	increment_receive(data, time_now)
+    increment_receive(message, time_now)
 
-	delete_old_messages(time_now)
+    delete_old_messages(time_now)
 
-	
+    check_full_msg(message, time_now)
 
     
 
