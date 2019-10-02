@@ -87,7 +87,7 @@ clover_message_dict = {}
 # Create file handler
 date_time = time.strftime('%y_%m_%d_%H_%M_%S')      # Date time, which will be the name of the log
 data_filename = "%s.csv" %   date_time               # Directory on desktop where logs will be stored
-
+logging.info(data_filename)
 
 def listener():
     """
@@ -101,7 +101,7 @@ def listener():
     try:
         # Setting up node and subscriber
         rospy.init_node(node_name)
-        rospy.Subscriber(rostopic_name)
+        rospy.Subscriber(rostopic_name, String, callback)
     except Exception as exc:
         logger.exception(exc)
         raise
@@ -140,6 +140,7 @@ def increment_receive(data, time_now):
     Function increments the proper message by one to indicate another receive of
     the same message
     """
+    logger.info("Incrementing message received %s" % data.data)
     message = data.data
 
     # If message is already there, incrementl
@@ -156,13 +157,17 @@ def write_to_csv(data, time_now):
     """
     Writes the data to a csv file
     """
+    logger.info("Writing to csv")
+
     row = [data.data, time_now]
     if os.path.exists(data_filename):
+	logger.info("File exists, writing to it")
         with open(data_filename, 'a') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
         
     else:
+	logger.info("File does not exist, create and write to it")
         with open(data_filename, 'w') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
@@ -180,7 +185,8 @@ def callback(data):
     delete_old_messages(time_now)
 
     increment_receive(data, time_now)
-
+    
+    write_to_csv(data, time_now)
 
 if __name__ == "__main__":
     listener()
