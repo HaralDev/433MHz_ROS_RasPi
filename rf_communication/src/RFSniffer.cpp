@@ -135,11 +135,11 @@ int main(int argc, char *argv[]) {
 	// From http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
 	spdlog::info("Setting up ROS parameters");
 
-	ros::init(argc, argv, "rf_messages");
+	ros::init(argc, argv, "RFSniffer");
 	
 	ros::NodeHandle n;
 
-	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
+	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("rfincoming", 1000);
 
 	ros::Rate loop_rate(loopFreq);
 

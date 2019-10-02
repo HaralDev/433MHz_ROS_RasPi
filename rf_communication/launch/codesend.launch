@@ -1,0 +1,3 @@
+<launch>
+	<node name="variablesetup" pkg='rf_communication" type="variablesetup"/> 
+</launch>

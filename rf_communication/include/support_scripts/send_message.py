@@ -51,9 +51,9 @@ def main_programme():
 
 		#-------------------------------------------------
 		# Set id and RF parameters
-		clover_id = os.environ.get("CLOVER_ID", str(1))
+		clover_id = os.environ.get("CLOVER_NR", str(1))
 		codesend_file = os.environ.get("CODESEND_FILE", "codesend")
-		protocol = '2'  # see RCSwitch.cpp lines 70-80
+		protocol = '0'  # see RCSwitch.cpp lines 70-80
 		logger.info("Parameters set. Clover_id: %s, codesend_file: %s, RF Protocol: %s", clover_id, codesend_file, protocol)
 
 
@@ -66,10 +66,10 @@ def main_programme():
 			raise
 	
 		#-------------------------------------------------
-		# Run the loop to send messages every 10 seconds
+		# Run the loop to send messages every 1 seconds
 		logger.info("Running for loop to send message.")
-		big_sleeptime = 3			# [seconds] Time between each message set
-		small_sleeptime = 0.2		# [seconds] Time between each message, this worked with a delay of 1, so now reducing to see performance
+		big_sleeptime = 1		# [seconds] Time between each message set
+		small_sleeptime = 0.1		# [seconds] Time between each message, this worked with a delay of 1, so now reducing to see performance
 
 		while(1):
 			for i, msg in enumerate(messages, 1):
