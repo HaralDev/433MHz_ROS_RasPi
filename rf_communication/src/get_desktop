@@ -1,0 +1,8 @@
+#!/usr/bin/env python2
+
+import logging
+from support_scripts.get_desktop import main
+
+if __name__=="__main__":
+	logging.info("RUNNING GET DESKTOP MAIN")
+	main()

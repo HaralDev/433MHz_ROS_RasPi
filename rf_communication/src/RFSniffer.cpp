@@ -19,6 +19,7 @@
 #include <rc-switch/RCSwitch.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include <unistd.h> 
 #include <iostream>
 #include <sstream>
@@ -41,11 +42,35 @@ RCSwitch mySwitch;
 // 						MAIN
 int main(int argc, char *argv[]) {
 
+
+    //              ROS SETUP
+    // Need this for parameters
+	ros::init(argc, argv, "RFSniffer");
+	
+	ros::NodeHandle n;
+
+    // Receiving Pin
+    int PIN;
+    if(!n.getParam("/PIN_IN", PIN)) {
+        spdlog::warn("PIN_IN environment variable is not set, please use launch file or set it manually");
+         return 0;
+    }
+
+    std:string DESKTOP_PATH;
+    if(!n.getParam("/DESKTOP_PATH", DESKTOP_PATH)) {
+        spdlog::warn("DESKTOP_PATH ros parameter variable is not set, please use launch file or set it manually");
+        return 0;
+    }
+
+
 	// 				LOGGING SETUP
 	// From: https://github.com/gabime/spdlog/wiki/1.-QuickStart
 	try {
-        // Create basic file logger (not rotated)
-        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("logs/log_RFSniffer.txt", true);
+
+        char path [256];
+        sprintf(path, "%s/logs/log_RFSniffer.txt", DESKTOP_PATH.c_str());    
+        //Sstd:string log_path = "%s/logs/log_RFSniffer.txt" % DESKTOP_PATH;
+        auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(path, true);
 		file_sink->set_level(spdlog::level::debug);
 		
 		auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -92,6 +117,24 @@ int main(int argc, char *argv[]) {
 	//				SETTING UP
 	spdlog::info("Setting up parameters and required objects (e.g. wiringPi, ROS)");
 
+    //			LOOP PARAMETERS
+	spdlog::info("Setting up loop parameters");
+	std::string msg_string;
+	std::stringstream ss;
+	
+	int loopFreq = 20;
+	spdlog::info("Looping at '{}' hz.", loopFreq);
+
+	spdlog::info("Loop parameters setup successful");
+
+    //			ROS PARAMETERS
+	// From http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
+	spdlog::info("Setting up ROS parameters");
+
+	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("rfincoming", 1000);
+
+	ros::Rate loop_rate(loopFreq);
+
 
 	//				WIRINGPI
      // This pin is not the first pin on the RPi GPIO header!
@@ -99,9 +142,8 @@ int main(int argc, char *argv[]) {
      // for more information.
      spdlog::info("Setting up wiringPi");
 	 
-	 // Improve on this logging, retrieve the variables from the mySwitch object and log these!
-
-	 int PIN = 2;
+	 // SETTING THE RECEIVING PIN
+    
 	 spdlog::info("Using PIN '{}' as receiving pin", PIN);
      
      if(wiringPiSetup() == -1) {
@@ -120,33 +162,12 @@ int main(int argc, char *argv[]) {
 	spdlog::info("WiringPi setup successful");
 
 
-	//			LOOP PARAMETERS
-	spdlog::info("Setting up loop parameters");
-	std::string msg_string;
-	std::stringstream ss;
-	
-	int loopFreq = 20;
-	spdlog::info("Looping at '{}' hz.", loopFreq);
-
-	spdlog::info("Loop parameters setup successful");
-
-
-	//			ROS PARAMETERS
-	// From http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
-	spdlog::info("Setting up ROS parameters");
-
-	ros::init(argc, argv, "RFSniffer");
-	
-	ros::NodeHandle n;
-
-	ros::Publisher chatter_pub = n.advertise<std_msgs::String>("rfincoming", 1000);
-
-	ros::Rate loop_rate(loopFreq);
-
 
 	spdlog::info("Setup complete");
 	spdlog::info("============================");
     
+
+
 	//---------------------------------------------
 	//				MAIN LOOP
 	spdlog::info("Running main loop, listening for messages");

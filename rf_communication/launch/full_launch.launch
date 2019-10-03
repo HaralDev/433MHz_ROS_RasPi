@@ -1,0 +1,10 @@
+<launch>
+	
+	<!-- Launch the nodes for receiving messages -->
+	<include file="$(find rf_communication)/launch/receivemessage.launch"/>
+		
+	
+	<!-- Run send_node to send messages -->
+	<node pkg="rf_communication" type="send_node" name="send_node" output="screen" launch-prefix="gnome-terminal --command"/>
+
+</launch>

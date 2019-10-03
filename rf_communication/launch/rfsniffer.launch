@@ -1,0 +1,4 @@
+<launch>
+	<!-- Run RFSniffer node -->
+	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer" output="screen" launch-prefix="gnome-terminal --command"/>
+</launch>

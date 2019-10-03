@@ -45,7 +45,7 @@ catkin_package(
 )
 
 # Python support install, should be called after catkin_package because only then is {CATKIN_PACKAGE_BIN_DESTINATION} made
-catkin_install_python(PROGRAMS src/send_node src/comms_data_eval.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS src/send_node src/get_desktop src/comms_data_eval.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
 # RC SWITCH library

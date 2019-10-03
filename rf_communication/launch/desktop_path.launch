@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="rf_communication" name="desktop_path" type="get_desktop" launch-prefix="gnome-terminal --command"/>
+</launch>

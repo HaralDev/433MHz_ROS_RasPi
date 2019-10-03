@@ -1,3 +1,16 @@
 <launch>
-	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer"/>
+
+	<!-- Get the receiving pin number, DEFINE THIS HERE -->	
+	<!-- if you are unsure which on it is, look at pinout.xyz/pinout/wiringpi -->
+	<param name="/PIN_IN" type="int" value="$(optenv PIN_IN 24)" />
+
+	<!-- GET THE DESKTOP PATH -->
+	<node pkg="rf_communication" name="desktop_path" type="get_desktop"/>
+
+	<!-- RUN RFSniffer to receive messages -->
+	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer" launch-prefix="gnome-terminal --command"/>
+	
+	<!-- RUN comms_data_eval.py to collect the data -->
+	<node pkg="rf_communication" name="comms_data_eval" type="comms_data_eval.py" output="screen" launch-prefix="gnome-terminal --command" />
+
 </launch>

@@ -179,7 +179,7 @@ def capture_single_msg_datapoint(message, data, clovername):
     occurance, genesis = data["received_nr"], data["genesis"]
     logger.info("Capturing datapoint {} which occured {} times, first at {}".format(message, occurance, genesis))
 	
-    file_name_part = "clover%s_singlemessage" % message[1]
+    file_name_part = "clovers_singlemessage"
     row = [genesis, occurance, message, clovername]
 	
     write_to_csv(row, file_name_part)
