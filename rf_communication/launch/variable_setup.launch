@@ -1,0 +1,21 @@
+<launch>
+	<!-- This launch file will setup all the variables that are needed for the code -->
+	
+	<!-- PIN NUMBERS -->
+	<!-- Set the sending and receiving pin number -->	
+	<!-- Can also be set to as environment variable (if set, optenv will use env variable) -->
+	<!-- if you are unsure which on it is, look at pinout.xyz/pinout/wiringpi -->
+	<param name="/PIN_IN" type="int" value="$(optenv PIN_IN 2)" />
+	<param name="/PIN_OUT" type="int" value="$(optenv PIN_OUT 0)" />
+
+	
+	<!-- MESSAGE SEND INTERVALS -->
+	<!-- Set the intervals for sending messages -->
+	<!-- Can also be set to as environment variable (if set, optenv will use env variable) -->
+	<param name="/BIG_STEP" type="int" value="$(optenv BIG_STEP 4)" />
+	<param name="/SMALL_STEP" type="int" value="$(optenv SMALL_STEP 5)" />
+
+	<!-- GET THE DESKTOP PATH -->
+	<node pkg="rf_communication" name="desktop_path" type="get_desktop"/>
+
+</launch>

@@ -1,3 +1,9 @@
 <launch>
-	<node name="variablesetup" pkg='rf_communication" type="variablesetup"/> 
+
+	<!-- SET ROS PARAMETERS -->
+	<!-- Can be changed within variable_setup.launch -->
+	<include file="$(find rf_communication)/launch/variable_setup.launch"/>
+
+	<!-- Run codesend node -->
+	<node pkg="rf_communication" type="codesend" name="codesend" args="-1412" output="screen" />
 </launch>

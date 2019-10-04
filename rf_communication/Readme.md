@@ -7,6 +7,7 @@ For this ROS package, multiple libraries were used:
 - WiringPi library, which is used by the rc-switch library (projects.drogon.net/wiringPi)
 - spdlog library, for logging (github.com/gabime/spdlog)
 - General internal libraries in ROS and C++. (e.g. iostream, sstream)
+- Gnome-termimal
 
 
 # INSTALLATION INSTRUCTIONS

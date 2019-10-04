@@ -1,7 +1,7 @@
 <launch>
-	<!-- Get the sending pin number, DEFINE THIS HERE -->	
-	<!-- if you are unsure which on it is, look at pinout.xyz/pinout/wiringpi -->
-	<param name="/PIN_OUT" type="int" value="$(optenv PIN_OUT 23)" />
+	<!-- SET ROS PARAMETERS -->
+	<!-- Can be changed within variable_setup.launch -->
+	<include file="$(find rf_communication)/launch/variable_setup.launch"/>
 
 	<node pkg="rf_communication" type="send_node" name="send_node"/>
 </launch>

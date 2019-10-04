@@ -1,11 +1,8 @@
 <launch>
 
-	<!-- Get the receiving pin number, DEFINE THIS HERE -->	
-	<!-- if you are unsure which on it is, look at pinout.xyz/pinout/wiringpi -->
-	<param name="/PIN_IN" type="int" value="$(optenv PIN_IN 24)" />
-
-	<!-- GET THE DESKTOP PATH -->
-	<node pkg="rf_communication" name="desktop_path" type="get_desktop"/>
+	<!-- SET ROS PARAMETERS -->
+	<!-- Can be changed within variable_setup.launch -->
+	<include file="$(find rf_communication)/launch/variable_setup.launch"/>
 
 	<!-- RUN RFSniffer to receive messages -->
 	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer" launch-prefix="gnome-terminal --command"/>

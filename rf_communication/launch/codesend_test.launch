@@ -1,9 +1,9 @@
 <launch>
-	
+
 	<!-- SET ROS PARAMETERS -->
 	<!-- Can be changed within variable_setup.launch -->
 	<include file="$(find rf_communication)/launch/variable_setup.launch"/>
 
-	<!-- Run RFSniffer node -->
-	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer" output="screen" launch-prefix="gnome-terminal --command"/>
+	<!-- Run codesend node -->
+	<node pkg="rf_communication" type="codesend" name="codesend" output="screen" launch-prefix="xterm -e gdb --args"/>
 </launch>
