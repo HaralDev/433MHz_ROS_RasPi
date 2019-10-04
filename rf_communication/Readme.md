@@ -7,12 +7,14 @@ For this ROS package, multiple libraries were used:
 - WiringPi library, which is used by the rc-switch library (projects.drogon.net/wiringPi)
 - spdlog library, for logging (github.com/gabime/spdlog)
 - General internal libraries in ROS and C++. (e.g. iostream, sstream)
-- Gnome-termimal
+- Gnome-termimal 
 
 
 # INSTALLATION INSTRUCTIONS
 
 - wiringPi library should be installed globally. This can simply be done with "sudo apt install wiringpi" (see projects.drogon.net/wiringPi)
+
+- Gnome-terminal should be installed globally, with "sudo apt install gnome-terminal"
 
 - To check the basic workings of the wiringPi library and the 433Utils library, install the 433Utils library separate first, make and run it. This should give you a basic understanding of the workings and it will show if the hardware is working properly.
 

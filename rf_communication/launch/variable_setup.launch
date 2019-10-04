@@ -8,6 +8,8 @@
 	<param name="/PIN_IN" type="int" value="$(optenv PIN_IN 5)" />
 	<param name="/PIN_OUT" type="int" value="$(optenv PIN_OUT 4)" />
 
+	<!-- CLOVER NR -->
+	<param name="/CLOVER_NR" type="str" value="$(optenv CLOVER_NR 5)" />
 	
 	<!-- MESSAGE SEND INTERVALS -->
 	<!-- Set the intervals for sending messages -->

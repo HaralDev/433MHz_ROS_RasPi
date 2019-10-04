@@ -20,10 +20,11 @@ else:
 	logger = setup_logging(main_file)
 
 try:
-	from send_support import *
-	import subprocess
-	from subprocess import PIPE
-	from time import sleep
+    from send_support import *
+    import subprocess
+    import rospy
+    from subprocess import PIPE
+    from time import sleep
 except ImportError as err:
 	logger.exception(err)
 	raise
@@ -52,7 +53,7 @@ def main_programme():
 
         #-------------------------------------------------
         # Set id and RF parameters
-        clover_id = os.environ.get("CLOVER_NR", str(1))
+        clover_id = rospy.get_param("/CLOVER_NR")
         codesend_file = os.environ.get("CODESEND_FILE", "codesend")
         protocol = '0'  # see RCSwitch.cpp lines 70-80
         logger.info("Parameters set. Clover_id: %s, codesend_file: %s, RF Protocol: %s", clover_id, codesend_file, protocol)
