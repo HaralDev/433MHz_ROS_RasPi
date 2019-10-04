@@ -22,3 +22,6 @@ def main():
     logging.info("ROS Parameters are: {}", str(rospy.get_param_names()))
     logging.info("Desktop path set to: {}".format(desktop_path_current))
     return
+
+if __name__ == "__main__":
+	main()

@@ -5,8 +5,8 @@
 	<!-- Set the sending and receiving pin number -->	
 	<!-- Can also be set to as environment variable (if set, optenv will use env variable) -->
 	<!-- if you are unsure which on it is, look at pinout.xyz/pinout/wiringpi -->
-	<param name="/PIN_IN" type="int" value="$(optenv PIN_IN 2)" />
-	<param name="/PIN_OUT" type="int" value="$(optenv PIN_OUT 0)" />
+	<param name="/PIN_IN" type="int" value="$(optenv PIN_IN 5)" />
+	<param name="/PIN_OUT" type="int" value="$(optenv PIN_OUT 4)" />
 
 	
 	<!-- MESSAGE SEND INTERVALS -->
@@ -17,4 +17,6 @@
 
 	<!-- GET THE DESKTOP PATH -->
 	<param name="/DESKTOP_PATH" type="str" value="/home/harald/Desktop" />
+	<node pkg="rf_communication" name="get_desktop" type="get_desktop.py" output="screen" />
+
 </launch>
