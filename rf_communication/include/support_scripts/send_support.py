@@ -31,8 +31,8 @@ def status_messages(clover_id):
         msg_send = format_message(message_nr=i, clover_id=clover_id, hash=hash_msg, message=msg)
         logger.info("Adding message to message list: %s", msg_send)
         messages.append(msg_send)
-
-    logger.debug("Composed a total of %d messages", len(messages))
+        
+    logger.info("Composed a total of %d messages", len(messages))
     return messages
 
 def total_msg_hash(message_list):

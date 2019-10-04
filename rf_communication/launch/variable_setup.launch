@@ -16,6 +16,5 @@
 	<param name="/SMALL_STEP" type="int" value="$(optenv SMALL_STEP 5)" />
 
 	<!-- GET THE DESKTOP PATH -->
-	<node pkg="rf_communication" name="desktop_path" type="get_desktop"/>
-
+	<param name="/DESKTOP_PATH" type="str" value="/home/harald/Desktop" />
 </launch>

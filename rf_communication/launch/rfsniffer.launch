@@ -5,5 +5,5 @@
 	<include file="$(find rf_communication)/launch/variable_setup.launch"/>
 
 	<!-- Run RFSniffer node -->
-	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer" output="screen" launch-prefix="gnome-terminal --command"/>
+	<node pkg="rf_communication" type="RFSniffer" name="RFSniffer" output="screen" />
 </launch>

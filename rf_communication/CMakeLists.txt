@@ -39,13 +39,13 @@ catkin_python_setup()
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES rc-switch spdlog
+  LIBRARIES rc-switch spdlog get_desktop
   CATKIN_DEPENDS roscpp rospy std_msgs
   DEPENDS message_runtime
 )
 
 # Python support install, should be called after catkin_package because only then is {CATKIN_PACKAGE_BIN_DESTINATION} made
-catkin_install_python(PROGRAMS src/send_node src/get_desktop src/comms_data_eval.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+catkin_install_python(PROGRAMS src/send_node src/desktop_path src/comms_data_eval.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
 # RC SWITCH library

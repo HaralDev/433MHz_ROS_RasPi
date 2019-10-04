@@ -1,5 +1,4 @@
 <launch>
-
 	<!-- SET ROS PARAMETERS -->
 	<!-- Can be changed within variable_setup.launch -->
 	<include file="$(find rf_communication)/launch/variable_setup.launch"/>

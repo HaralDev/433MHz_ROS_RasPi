@@ -63,45 +63,45 @@ def main_programme():
         try:
             messages = status_messages(clover_id)
         except Exception as exc:
-            logger.warn(exc)
-            raise
+            logger.exception(exc)
+            sleep(.1)
+            raise exc
+        #-------------------------------------------------
+        # Run the loop to send messages every 1 seconds
+        logger.info("Running for loop to send message.")
+        big_sleeptime = 1.8		# [seconds] Time between each message set
+        small_sleeptime = 0.3		# [seconds] Time between each message, this worked with a delay of 1, so now reducing to see performance
+
+        while(1):
+	        for i, msg in enumerate(messages, 1):
+		        logger.info("Sending message %s", msg)
+
+		        # Compose whole command to send to codesend
+		        # Run the rosnode to send the message, if error "OSError: [Errno 2] No such file or directory"
+		        # is returned, this might mean that the workspace is not yet made. It at least means that it
+		        # can not find an executable file named "codesend"
+		        command = ["rosrun", "rf_communication", 'codesend', msg, protocol]
+		        logger.info("Sending command: %s", ' '.join(tuple(command)))
 	
-	    #-------------------------------------------------
-	    # Run the loop to send messages every 1 seconds
-	    logger.info("Running for loop to send message.")
-	    big_sleeptime = 1.8		# [seconds] Time between each message set
-	    small_sleeptime = 0.3		# [seconds] Time between each message, this worked with a delay of 1, so now reducing to see performance
+		        # Run command and get output
 
-	    while(1):
-		    for i, msg in enumerate(messages, 1):
-			    logger.info("Sending message %s", msg)
+		        MyOut = subprocess.Popen(command, 
+					        stdout=subprocess.PIPE, 
+					        stderr=subprocess.STDOUT)
+		        stdout,stderr = MyOut.communicate()
 
-			    # Compose whole command to send to codesend
-			    # Run the rosnode to send the message, if error "OSError: [Errno 2] No such file or directory"
-			    # is returned, this might mean that the workspace is not yet made. It at least means that it
-			    # can not find an executable file named "codesend"
-			    command = ["rosrun", "rf_communication", 'codesend', msg, protocol]
-			    logger.info("Sending command: %s", ' '.join(tuple(command)))
-		
-			    # Run command and get output
+		        # Log the output
+		        logger.debug("Stdout: %s", stdout)
 
-			    MyOut = subprocess.Popen(command, 
-						    stdout=subprocess.PIPE, 
-						    stderr=subprocess.STDOUT)
-			    stdout,stderr = MyOut.communicate()
-
-			    # Log the output
-			    logger.debug("Stdout: %s", stdout)
-
-			    # If an error is returned, log this with warn level
-			    if stderr is not None:
-				    logger.warn("Stderr: %s", stderr)
-		
-			    # Sleep for a small time between each message (to prevent overflow)
-			    sleep(small_sleeptime)
+		        # If an error is returned, log this with warn level
+		        if stderr is not None:
+			        logger.warn("Stderr: %s", stderr)
 	
-		    # Sleep for a longer time between each message
-		    sleep(big_sleeptime)
+		        # Sleep for a small time between each message (to prevent overflow)
+		        sleep(small_sleeptime)
+
+	        # Sleep for a longer time between each message
+	        sleep(big_sleeptime)
     except Exception as exc:
         logging.warn(exc)
         raise

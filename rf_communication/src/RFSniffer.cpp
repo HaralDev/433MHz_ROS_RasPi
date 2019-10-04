@@ -33,7 +33,7 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 
-using namespace std;  // don't know what this is  
+using namespace std; 
 
 RCSwitch mySwitch;
  
@@ -42,26 +42,24 @@ RCSwitch mySwitch;
 // 						MAIN
 int main(int argc, char *argv[]) {
 
-
-    //              ROS SETUP
+     //              ROS SETUP
     // Need this for parameters
 	ros::init(argc, argv, "RFSniffer");
 	
 	ros::NodeHandle n;
 
-    // Receiving Pin
+   // Receiving Pin
     int PIN;
     if(!n.getParam("/PIN_IN", PIN)) {
-        spdlog::warn("PIN_IN environment variable is not set, please use launch file or set it manually");
-         return 0;
+        cerr << "PIN_IN environment variable is not set, please use launch file or set it manually";
+        return -1;
     }
 
     std:string DESKTOP_PATH;
     if(!n.getParam("/DESKTOP_PATH", DESKTOP_PATH)) {
-        spdlog::warn("DESKTOP_PATH ros parameter variable is not set, please use launch file or set it manually");
-        return 0;
+        cerr << "DESKTOP_PATH ros parameter variable is not set, please use launch file or set it manually";
+        return -1;
     }
-
 
 	// 				LOGGING SETUP
 	// From: https://github.com/gabime/spdlog/wiki/1.-QuickStart
@@ -87,7 +85,6 @@ int main(int argc, char *argv[]) {
 	spdlog::info("Logging successfully setup");
 	spdlog::info("Logging with debug level during setup");
 	
-
 	
 	spdlog::info("============================");
 	spdlog::info("Starting RFSniffer programme");
@@ -100,12 +97,12 @@ int main(int argc, char *argv[]) {
 	if (test_check_msg()==false) {
 		spdlog::warn("Testing with test_check_msg() failed, stop programme");
 		spdlog::info("============================");
-		exit(0);
+		return -1;
 	}
 	else if (test_get_int_from_str()==false) {
 		spdlog::warn("Testing with test_get_int_from_str() failed, stop programme");
 		spdlog::info("============================");
-		exit(0);
+		return -1;
 	}
 	else {
 		spdlog::info("All tests were successful");
@@ -167,12 +164,18 @@ int main(int argc, char *argv[]) {
 	spdlog::info("============================");
     
 
-
+    
 	//---------------------------------------------
 	//				MAIN LOOP
+    time_t t_now;
 	spdlog::info("Running main loop, listening for messages");
     while(ros::ok()) {
-		
+        
+        // Post message to indicate script is still looking pessage
+		if (time(&t_now) % 50 == 0) {
+            spdlog::info("Waiting for message on PIN: %d ...", PIN);
+        }
+
       	if (mySwitch.available()) {
 
 			int value = mySwitch.getReceivedValue();		// Receive value
@@ -205,13 +208,13 @@ int main(int argc, char *argv[]) {
 				
 			}
     
-        fflush(stdout);
+        
         mySwitch.resetAvailable();
     }
     loop_rate.sleep();
   
   }
-
+  fflush(stdout);
   exit(0);
 
 
